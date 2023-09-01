@@ -14,7 +14,8 @@
 }
 
 .timer-progress-bar[b-al984um4pw] {
-    width: 300px;
+    width: 310px;
+    padding: 5px;
     margin: 20px auto;
     border-radius: 20px;
     height: 20px;
@@ -22,7 +23,7 @@
 }
 
 .timer-progress-bar-line[b-al984um4pw] {
-    height: inherit;
+    height: 10px;
     border-radius: 20px;
     background: blue;
 }

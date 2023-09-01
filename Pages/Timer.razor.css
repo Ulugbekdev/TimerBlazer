@@ -13,7 +13,8 @@
 }
 
 .timer-progress-bar {
-    width: 300px;
+    width: 310px;
+    padding: 5px;
     margin: 20px auto;
     border-radius: 20px;
     height: 20px;
@@ -21,7 +22,7 @@
 }
 
 .timer-progress-bar-line {
-    height: inherit;
+    height: 10px;
     border-radius: 20px;
     background: blue;
 }
