@@ -1,6 +1,7 @@
 ﻿@page "/timer"
-
-<PageTitle>Timer</PageTitle>
+@using TimerApp.Data
+@using TimerApp.Services
+@inherits OwningComponentBase<HistoryService>
 
 <div class="text-center">
     <h1>Timer</h1>
@@ -33,47 +34,67 @@
         <button class="btn btn-primary mt-2 timer-btn" @onclick="Pause">Pause</button>
     }
     <button class="btn btn-primary mt-2 timer-btn" @onclick="Reset">Reset</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var history in hs)
+            {
+                <tr>
+                    <td>@history.start_time</td>
+                    <td>@history.end_time</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 @code {
+    public System.Collections.Generic.IList<History>? hs;
     System.Timers.Timer? timer;
+    public DateTime startTime;
     public bool isContinue = false;
-    public string widthProgress = "0px";
+    public string widthProgress = "0%";
     public int currentWidthProgress;
-    public int calcProgress;
+    public TimeSpan savedTotalDistance;
     public string? error;
     public int hIp, mIp, sIp;
     public bool isFirst = true;
     public int h, m, s;
     public DateTime time;
     TimeSpan distance;
-    TimeSpan savedDistance;
+    TimeSpan savedDistancePause;
     public void Start()
     {
-        if (hIp < 24 || mIp < 60 || sIp < 60 || hIp > 0 || mIp > 0 || sIp > 0)
-        {
-            error = "";
-            var dateNow = DateTime.Now;
-            time = new DateTime(
-            dateNow.Year,
-            dateNow.Month,
-            dateNow.Day,
-            dateNow.Hour + hIp,
-            dateNow.Minute + mIp,
-            dateNow.Second + sIp + 1
-            );
-            TimeSpan d = time - DateTime.Now;
-            calcProgress = 300 / (d.Hours * 60 * 60 + d.Minutes * 60 + d.Seconds);
-            timer = new System.Timers.Timer(1000);
-            timer.Elapsed += CountDown;
-            timer.Start();
-            CalcTimer();
-        }
-        else
+        if (
+        (hIp > 24 || mIp > 60 || sIp > 60)
+        || (hIp < 0 || mIp < 0 || sIp < 0)
+        || (hIp == 0 && mIp == 0 && sIp == 0)
+        )
         {
             error = "Entired correctly format timer";
             return;
         }
+        error = "";
+        DateTime dateNow = DateTime.Now;
+        time = new DateTime(
+        dateNow.Year,
+        dateNow.Month,
+        dateNow.Day,
+        dateNow.Hour + hIp,
+        dateNow.Minute + mIp,
+        dateNow.Second + sIp + 1
+        );
+        savedTotalDistance = time - dateNow;
+        timer = new System.Timers.Timer(1000);
+        timer.Elapsed += CountDown;
+        timer.Start();
+        CalcTimer();
+        startTime = DateTime.Now;
     }
     private void CountDown(Object? source, System.Timers.ElapsedEventArgs e)
     {
@@ -97,8 +118,9 @@
         if (currentWidthProgress < 300)
         {
             if (isFirst) return;
-            currentWidthProgress += calcProgress;
-            widthProgress = currentWidthProgress + "px";
+            double newTotal = savedTotalDistance.TotalSeconds;
+            double newDis = distance.TotalSeconds;
+            widthProgress = Math.Round(((newTotal - newDis) / newTotal) * 100, 0, MidpointRounding.ToEven) + "%";
         }
     }
     private void Pause()
@@ -107,7 +129,7 @@
         {
             isContinue = true;
             timer.Enabled = false;
-            savedDistance = time - DateTime.Now;
+            savedDistancePause = time - DateTime.Now;
         }
     }
     private void Continue()
@@ -121,9 +143,9 @@
             dateNow.Year,
             dateNow.Month,
             dateNow.Day,
-            dateNow.Hour + savedDistance.Hours,
-            dateNow.Minute + savedDistance.Minutes,
-            dateNow.Second + savedDistance.Seconds + 1
+            dateNow.Hour + savedDistancePause.Hours,
+            dateNow.Minute + savedDistancePause.Minutes,
+            dateNow.Second + savedDistancePause.Seconds + 2
             );
         }
     }
@@ -132,15 +154,21 @@
         if (timer is System.Timers.Timer)
         {
             timer.Enabled = false;
-            hIp = 0;
-            mIp = 0;
-            sIp = 0;
+            timer = null;
             h = 0;
             m = 0;
             s = 0;
+            isFirst = true;
             time = DateTime.Now;
             currentWidthProgress = 0;
-            widthProgress = "0px";
+            widthProgress = "0%";
+            Service.addHistory(startTime.ToString(), DateTime.Now.ToString());
+            hs = Service.displayHistory();
         }
+    }
+    protected override Task OnInitializedAsync()
+    {
+        hs = Service.displayHistory();
+        return Task.FromResult(hs);
     }
 }
