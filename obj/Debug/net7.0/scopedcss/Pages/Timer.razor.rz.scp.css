@@ -1,0 +1,31 @@
+.timer-status[b-al984um4pw] {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.timer-item + .timer-item[b-al984um4pw] {
+    margin-left: 15px;
+}
+
+.timer-input[b-al984um4pw] {
+    width: 70px;
+    height: 40px;
+}
+
+.timer-progress-bar[b-al984um4pw] {
+    width: 300px;
+    margin: 20px auto;
+    border-radius: 20px;
+    height: 20px;
+    background: gray;
+}
+
+.timer-progress-bar-line[b-al984um4pw] {
+    height: inherit;
+    border-radius: 20px;
+    background: blue;
+}
+
+.timer-btn + .timer-btn[b-al984um4pw] {
+    margin-left: 10px;
+}
