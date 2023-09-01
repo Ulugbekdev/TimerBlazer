@@ -1,0 +1,146 @@
+﻿@page "/timer"
+
+<PageTitle>Timer</PageTitle>
+
+<div class="text-center">
+    <h1>Timer</h1>
+    <p class="timer-status">Countdown @h : @m : @s</p>
+    <div class="timer-progress-bar">
+        <div class="timer-progress-bar-line" style="width: @widthProgress"></div>
+    </div>
+    <div class="d-flex gap-10 justify-content-center">
+        <div class="timer-item">
+            <p class="mb-0">Hour</p>
+            <input class="timer-input" type="number" @bind="hIp" />
+        </div>
+        <div class="timer-item">
+            <p class="mb-0">Minute</p>
+            <input class="timer-input" type="number" @bind="mIp" />
+        </div>
+        <div class="timer-item">
+            <p class="mb-0">Second</p>
+            <input class="timer-input" type="number" @bind="sIp" />
+        </div>
+    </div>
+    <p class="mt-4 text-danger">@error</p>
+    <button class="btn btn-primary mt-2 timer-btn" @onclick="Start">Start</button>
+    @if (isContinue)
+    {
+        <button class="btn btn-primary mt-2 timer-btn" @onclick="Continue">Continue</button>
+    }
+    else
+    {
+        <button class="btn btn-primary mt-2 timer-btn" @onclick="Pause">Pause</button>
+    }
+    <button class="btn btn-primary mt-2 timer-btn" @onclick="Reset">Reset</button>
+</div>
+
+@code {
+    System.Timers.Timer? timer;
+    public bool isContinue = false;
+    public string widthProgress = "0px";
+    public int currentWidthProgress;
+    public int calcProgress;
+    public string? error;
+    public int hIp, mIp, sIp;
+    public bool isFirst = true;
+    public int h, m, s;
+    public DateTime time;
+    TimeSpan distance;
+    TimeSpan savedDistance;
+    public void Start()
+    {
+        if (hIp < 24 || mIp < 60 || sIp < 60 || hIp > 0 || mIp > 0 || sIp > 0)
+        {
+            error = "";
+            var dateNow = DateTime.Now;
+            time = new DateTime(
+            dateNow.Year,
+            dateNow.Month,
+            dateNow.Day,
+            dateNow.Hour + hIp,
+            dateNow.Minute + mIp,
+            dateNow.Second + sIp + 1
+            );
+            TimeSpan d = time - DateTime.Now;
+            calcProgress = 300 / (d.Hours * 60 * 60 + d.Minutes * 60 + d.Seconds);
+            timer = new System.Timers.Timer(1000);
+            timer.Elapsed += CountDown;
+            timer.Start();
+            CalcTimer();
+        }
+        else
+        {
+            error = "Entired correctly format timer";
+            return;
+        }
+    }
+    private void CountDown(Object? source, System.Timers.ElapsedEventArgs e)
+    {
+        if (isFirst || h > 0 || m > 0 || s > 0)
+        {
+            isFirst = false;
+            CalcTimer();
+        }
+        else
+        {
+            Reset();
+        }
+        InvokeAsync(StateHasChanged);
+    }
+    private void CalcTimer()
+    {
+        distance = time - DateTime.Now;
+        h = distance.Hours;
+        m = distance.Minutes;
+        s = distance.Seconds;
+        if (currentWidthProgress < 300)
+        {
+            if (isFirst) return;
+            currentWidthProgress += calcProgress;
+            widthProgress = currentWidthProgress + "px";
+        }
+    }
+    private void Pause()
+    {
+        if (timer is System.Timers.Timer)
+        {
+            isContinue = true;
+            timer.Enabled = false;
+            savedDistance = time - DateTime.Now;
+        }
+    }
+    private void Continue()
+    {
+        if (timer is System.Timers.Timer)
+        {
+            isContinue = false;
+            timer.Enabled = true;
+            DateTime dateNow = DateTime.Now;
+            time = new DateTime(
+            dateNow.Year,
+            dateNow.Month,
+            dateNow.Day,
+            dateNow.Hour + savedDistance.Hours,
+            dateNow.Minute + savedDistance.Minutes,
+            dateNow.Second + savedDistance.Seconds + 1
+            );
+        }
+    }
+    private void Reset()
+    {
+        if (timer is System.Timers.Timer)
+        {
+            timer.Enabled = false;
+            hIp = 0;
+            mIp = 0;
+            sIp = 0;
+            h = 0;
+            m = 0;
+            s = 0;
+            time = DateTime.Now;
+            currentWidthProgress = 0;
+            widthProgress = "0px";
+        }
+    }
+}

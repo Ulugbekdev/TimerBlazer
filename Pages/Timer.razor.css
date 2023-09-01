@@ -1,0 +1,31 @@
+.timer-status {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.timer-item + .timer-item {
+    margin-left: 15px;
+}
+
+.timer-input {
+    width: 70px;
+    height: 40px;
+}
+
+.timer-progress-bar {
+    width: 300px;
+    margin: 20px auto;
+    border-radius: 20px;
+    height: 20px;
+    background: gray;
+}
+
+.timer-progress-bar-line {
+    height: inherit;
+    border-radius: 20px;
+    background: blue;
+}
+
+.timer-btn + .timer-btn {
+    margin-left: 10px;
+}

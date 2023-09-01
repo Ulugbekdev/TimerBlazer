@@ -87,39 +87,39 @@
         }
       },
       {
-        "HashCode": 189636548,
+        "HashCode": 505953513,
         "Kind": "Components.Component",
-        "Name": "TimerApp.Pages.Counter",
+        "Name": "TimerApp.Pages.Timer",
         "AssemblyName": "TimerApp",
-        "DisplayName": "TimerApp.Pages.Counter",
+        "DisplayName": "TimerApp.Pages.Timer",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "Counter"
+            "TagName": "Timer"
           }
         ],
         "Metadata": {
-          "Common.TypeName": "TimerApp.Pages.Counter",
-          "Common.TypeNameIdentifier": "Counter",
+          "Common.TypeName": "TimerApp.Pages.Timer",
+          "Common.TypeNameIdentifier": "Timer",
           "Common.TypeNamespace": "TimerApp.Pages",
           "Runtime.Name": "Components.IComponent"
         }
       },
       {
-        "HashCode": 914731953,
+        "HashCode": 287981856,
         "Kind": "Components.Component",
-        "Name": "TimerApp.Pages.Counter",
+        "Name": "TimerApp.Pages.Timer",
         "AssemblyName": "TimerApp",
-        "DisplayName": "TimerApp.Pages.Counter",
+        "DisplayName": "TimerApp.Pages.Timer",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "TimerApp.Pages.Counter"
+            "TagName": "TimerApp.Pages.Timer"
           }
         ],
         "Metadata": {
-          "Common.TypeName": "TimerApp.Pages.Counter",
-          "Common.TypeNameIdentifier": "Counter",
+          "Common.TypeName": "TimerApp.Pages.Timer",
+          "Common.TypeNameIdentifier": "Timer",
           "Common.TypeNamespace": "TimerApp.Pages",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch",
           "Runtime.Name": "Components.IComponent"
@@ -24442,8 +24442,8 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\User\\Desktop\\TimerApp\\Pages\\Counter.razor",
-      "TargetPath": "Pages\\Counter.razor",
+      "FilePath": "c:\\Users\\User\\Desktop\\TimerApp\\Pages\\Timer.razor",
+      "TargetPath": "Pages\\Timer.razor",
       "FileKind": "component"
     }
   ]
